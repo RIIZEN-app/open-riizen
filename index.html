@@ -1,22 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RIIZEN – Reise öffnen</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f7f7f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 40px 32px;
+      max-width: 360px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 4px 40px rgba(0,0,0,0.10);
+    }
+    .globe { font-size: 56px; margin-bottom: 20px; }
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 12px;
+    }
+    p {
+      font-size: 15px;
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: 32px;
+    }
+    .btn {
+      display: inline-block;
+      background: #111;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 16px 32px;
+      border-radius: 14px;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+    }
+    .btn:active { opacity: 0.8; }
+    .hint {
+      font-size: 13px;
+      color: #aaa;
+      margin-top: 16px;
+    }
+  </style>
 </head>
 <body>
+  <div class="card">
+    <div class="globe">🌍</div>
+    <h1>Reise in RIIZEN öffnen</h1>
+    <p>Jemand hat eine Reise mit dir geteilt. Tippe auf den Button, um sie in der RIIZEN App zu öffnen.</p>
+    <button class="btn" onclick="openInApp()">In RIIZEN öffnen →</button>
+    <p class="hint">RIIZEN muss auf deinem iPhone installiert sein.</p>
+  </div>
+
   <script>
-    const p = new URLSearchParams(window.location.search).get("p");
-    const id = new URLSearchParams(window.location.search).get("id");
-    if (p && id) {
-      window.location.href = "riizen://d?id=" + id + "&p=" + p;
-    } else if (id) {
-      window.location.href = "riizen://d?id=" + id;
+    function buildRizenURL() {
+      var params = new URLSearchParams(window.location.search);
+      var i = params.get('i');
+      var p = params.get('p');
+      if (!i || !p) return null;
+      return 'riizen://share?i=' + encodeURIComponent(i) + '&p=' + encodeURIComponent(p);
     }
+
+    function openInApp() {
+      var url = buildRizenURL();
+      if (url) {
+        window.location.href = url;
+      } else {
+        alert('Kein gültiger Link.');
+      }
+    }
+
+    // Auto-open after 800ms delay
+    window.addEventListener('DOMContentLoaded', function() {
+      var url = buildRizenURL();
+      if (url) {
+        setTimeout(function() {
+          window.location.href = url;
+        }, 800);
+      }
+    });
   </script>
-  <p style="font-family:sans-serif;text-align:center;margin-top:40px">
-    Öffne diesen Link in RIIZEN 🌍
-  </p>
 </body>
 </html>
+
